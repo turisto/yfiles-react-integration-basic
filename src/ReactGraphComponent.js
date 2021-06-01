@@ -1,6 +1,6 @@
 import 'yfiles/yfiles.css'
 import React, { Component } from 'react'
-import {GraphComponent, GraphEditorInputMode, License, Point, Rect} from 'yfiles'
+import {GraphComponent, GraphEditorInputMode, GraphMLIOHandler, License, Point, Rect} from 'yfiles'
 import licenseData from './license'
 
 License.value = licenseData
@@ -16,12 +16,15 @@ export default class ReactGraphComponent extends Component {
     this.graphComponent.inputMode = new GraphEditorInputMode()
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     // append the GraphComponent to the DOM
     this.div.appendChild(this.graphComponent.div)
 
     // create some graph elements
-    this.createSampleGraph(this.graphComponent.graph)
+    //this.createSampleGraph(this.graphComponent.graph)
+    const graphMLIOHandler = new GraphMLIOHandler()
+    await graphMLIOHandler.readFromURL(this.graphComponent.graph, 'sample.graphml')
+    console.log(this.graphComponent.graph.nodes.size)
 
     // center the newly created graph
     this.graphComponent.fitGraphBounds()
